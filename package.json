@@ -1,0 +1,103 @@
+{
+  "name": "storybook-addon-shadcn-theme-editor",
+  "version": "0.1.0",
+  "description": "Live theme editor for shadcn CSS variables (OKLCH) in Storybook – tweak light & dark colours, radius and fonts, import from and export to app.css.",
+  "keywords": [
+    "storybook-addon",
+    "storybook",
+    "shadcn",
+    "shadcn-ui",
+    "shadcn-svelte",
+    "theme",
+    "theming",
+    "css-variables",
+    "oklch",
+    "tailwindcss",
+    "design-tokens",
+    "style"
+  ],
+  "homepage": "https://github.com/ghudev/storybook-addon-shadcn-theme-editor#readme",
+  "bugs": {
+    "url": "https://github.com/ghudev/storybook-addon-shadcn-theme-editor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghudev/storybook-addon-shadcn-theme-editor.git"
+  },
+  "license": "MIT",
+  "author": "Marian Weirich",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./manager": "./dist/manager.js",
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "default": "./dist/preview.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsup",
+    "dev": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint --fix ."
+  },
+  "peerDependencies": {
+    "storybook": "^10.0.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.1.1",
+    "@eslint/js": "^10.0.1",
+    "@storybook/html-vite": "^10.6.7",
+    "@types/react": "^19.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.2",
+    "@typescript-eslint/parser": "^8.72.2",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.7",
+    "eslint-plugin-storybook": "^10.6.7",
+    "prettier": "^3.10.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "storybook": "^10.6.7",
+    "tsup": "^9.0.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "storybook": {
+    "displayName": "shadcn Theme Editor",
+    "supportedFrameworks": [
+      "svelte",
+      "react",
+      "vue3",
+      "angular",
+      "web-components",
+      "html",
+      "preact",
+      "solid"
+    ]
+  }
+}

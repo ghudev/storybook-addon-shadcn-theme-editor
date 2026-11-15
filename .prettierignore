@@ -1,0 +1,8 @@
+dist
+node_modules
+storybook-static
+coverage
+*.log
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
