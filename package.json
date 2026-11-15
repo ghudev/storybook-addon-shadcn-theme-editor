@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-shadcn-theme-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Live theme editor for shadcn CSS variables (OKLCH) in Storybook – tweak light & dark colours, radius and fonts, import from and export to app.css.",
   "keywords": [
     "storybook-addon",
