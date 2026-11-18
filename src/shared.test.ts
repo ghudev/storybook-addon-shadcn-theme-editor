@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
+  convertColor,
+  detectFormat,
+  formatHsl,
+  formatRgb,
+  hslToRgb,
+  hsvToRgb,
+  inSrgbGamut,
+  oklchToRgb,
+  parseHsl,
+  parseRgb,
+  rgbToHex,
+  rgbToHsl,
+  rgbToHsv,
   formatOklch,
   formatThemeCss,
   hexToOklch,
@@ -93,5 +106,64 @@ describe('isColorValue', () => {
     expect(isColorValue('#abc')).toBe(true);
     expect(isColorValue('0.625rem')).toBe(false);
     expect(isColorValue('ui-sans-serif, system-ui')).toBe(false);
+  });
+});
+
+describe('rgb / hsl parsing and formatting', () => {
+  it('parses modern and legacy syntax', () => {
+    expect(rgbToHex(parseRgb('rgb(59 130 246)')!)).toBe('#3b82f6');
+    expect(parseRgb('rgba(255, 0, 0, 0.5)')).toEqual({ r: 1, g: 0, b: 0, alpha: 0.5 });
+    expect(parseHsl('hsl(217.2 91.2% 59.8% / 50%)')).toEqual({
+      h: 217.2,
+      s: 91.2,
+      l: 59.8,
+      alpha: 0.5,
+    });
+    expect(parseHsl('hsla(0, 100%, 50%, 1)')).toEqual({ h: 0, s: 100, l: 50, alpha: 1 });
+    expect(parseRgb('oklch(0.5 0.1 20)')).toBeNull();
+  });
+
+  it('formats with modern syntax', () => {
+    expect(formatRgb({ r: 1, g: 0.5, b: 0, alpha: 0.25 })).toBe('rgb(255 128 0 / 25%)');
+    expect(formatHsl({ h: 210.04, s: 40, l: 98.04, alpha: 1 })).toBe('hsl(210 40% 98%)');
+  });
+
+  it('detects formats', () => {
+    expect(detectFormat('oklch(0.5 0.1 20)')).toBe('oklch');
+    expect(detectFormat('rgb(0 0 0)')).toBe('rgb');
+    expect(detectFormat('hsl(0 0% 0%)')).toBe('hsl');
+    expect(detectFormat('#fff')).toBe('hex');
+    expect(detectFormat('var(--x)')).toBeNull();
+  });
+});
+
+describe('hsl / hsv conversion', () => {
+  it('round-trips through hsl and hsv', () => {
+    for (const hex of ['#3b82f6', '#ef4444', '#22c55e', '#737373', '#000000', '#ffffff']) {
+      const rgb = parseRgb(
+        `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(' ')})`
+      )!;
+      expect(rgbToHex(hslToRgb(rgbToHsl(rgb)))).toBe(hex);
+      expect(rgbToHex(hsvToRgb(rgbToHsv(rgb)))).toBe(hex);
+    }
+  });
+});
+
+describe('convertColor', () => {
+  it('translates between oklch, rgb and hsl', () => {
+    expect(convertColor('rgb(255 0 0)', 'hsl')).toBe('hsl(0 100% 50%)');
+    expect(convertColor('hsl(0 100% 50%)', 'rgb')).toBe('rgb(255 0 0)');
+    expect(convertColor('oklch(1 0 0)', 'rgb')).toBe('rgb(255 255 255)');
+    expect(convertColor('rgb(255 255 255)', 'oklch')).toBe('oklch(1 0 0)');
+    expect(convertColor('oklch(1 0 0 / 10%)', 'hsl')).toBe('hsl(0 0% 100% / 10%)');
+  });
+
+  it('leaves a value alone when it is already in that format', () => {
+    expect(convertColor('oklch(0.6 0.2 260)', 'oklch')).toBe('oklch(0.6 0.2 260)');
+  });
+
+  it('flags colours outside sRGB', () => {
+    expect(inSrgbGamut(oklchToRgb({ l: 0.6, c: 0.37, h: 150, alpha: 1 }))).toBe(false);
+    expect(inSrgbGamut(oklchToRgb({ l: 0.6, c: 0.05, h: 150, alpha: 1 }))).toBe(true);
   });
 });

@@ -5,6 +5,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Changed
+
+- The colour swatch now opens a popover picker: a saturation/brightness field, hue and alpha
+  bars, and OKLCH / RGB / HSL channel sliders with number inputs and a hex field. Switching the
+  format tab converts the variable to that format. This replaces the **LCH** button.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

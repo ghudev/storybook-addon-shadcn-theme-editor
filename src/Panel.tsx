@@ -4,19 +4,15 @@ import { useTheme } from 'storybook/theming';
 import {
   EVENTS,
   emptyTheme,
-  formatOklch,
   formatThemeCss,
-  hexToOklch,
   isColorValue,
   loadOverrides,
-  oklchToHex,
-  parseOklch,
   parseThemeCss,
   saveOverrides,
   type Mode,
-  type Oklch,
   type ThemeVars,
 } from './shared';
+import { ColorSwatchPicker } from './ColorPicker';
 
 export function ThemeEditorPanel() {
   const theme = useTheme();
@@ -24,7 +20,6 @@ export function ThemeEditorPanel() {
   const [overrides, setOverrides] = useState<ThemeVars>(loadOverrides);
   const [mode, setMode] = useState<Mode>('light');
   const [filter, setFilter] = useState('');
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [drawer, setDrawer] = useState<'import' | 'export' | null>(null);
   const [importText, setImportText] = useState('');
   const [message, setMessage] = useState('');
@@ -221,8 +216,6 @@ export function ThemeEditorPanel() {
           name={key}
           value={value}
           changed={key in overrides[mode]}
-          open={expanded === key}
-          onToggle={() => setExpanded(expanded === key ? null : key)}
           onChange={(v) => setVar(key, v)}
           onReset={() => resetVar(key)}
           inputStyle={input}
@@ -336,100 +329,23 @@ function ColorRow(props: {
   name: string;
   value: string;
   changed: boolean;
-  open: boolean;
-  onToggle: () => void;
   onChange: (v: string) => void;
   onReset: () => void;
   inputStyle: React.CSSProperties;
   border: string;
   muted: string;
 }) {
-  const oklch = parseOklch(props.value);
-  const hex = oklch
-    ? oklchToHex(oklch)
-    : /^#[0-9a-f]{6}$/i.test(props.value)
-      ? props.value
-      : '#000000';
-
-  const swatch = (
-    <label
-      title="Pick a colour"
-      style={{
-        position: 'relative',
-        width: 28,
-        height: 22,
-        flexShrink: 0,
-        borderRadius: 4,
-        border: props.border,
-        cursor: 'pointer',
-        overflow: 'hidden',
-        // checkerboard so transparency is visible
-        background: 'repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0 0 / 8px 8px',
-      }}
-    >
-      <span style={{ position: 'absolute', inset: 0, background: props.value }} />
-      <input
-        type="color"
-        value={hex}
-        onChange={(e) => props.onChange(formatOklch(hexToOklch(e.target.value, oklch?.alpha ?? 1)))}
-        style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
-      />
-    </label>
-  );
-
-  const slider = (label: string, key: keyof Oklch, min: number, max: number, step: number) =>
-    oklch && (
-      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <span style={{ width: 14, color: props.muted }}>{label}</span>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={oklch[key]}
-          onChange={(e) =>
-            props.onChange(formatOklch({ ...oklch, [key]: parseFloat(e.target.value) }))
-          }
-          style={{ flex: 1 }}
-        />
-        <code style={{ width: 48, textAlign: 'right' }}>{Number(oklch[key].toFixed(3))}</code>
-      </label>
-    );
-
   return (
-    <div>
-      <Row
-        name={props.name}
-        changed={props.changed}
-        onReset={props.onReset}
-        muted={props.muted}
-        leading={swatch}
-      >
-        <TextValue value={props.value} onCommit={props.onChange} style={props.inputStyle} />
-        {oklch && (
-          <button
-            title="Fine-tune lightness, chroma, hue"
-            onClick={props.onToggle}
-            style={{
-              border: props.border,
-              borderRadius: 4,
-              background: 'none',
-              color: 'inherit',
-              cursor: 'pointer',
-            }}
-          >
-            {props.open ? '▾' : '▸'} LCH
-          </button>
-        )}
-      </Row>
-      {props.open && oklch && (
-        <div style={{ display: 'grid', gap: 4, padding: '4px 0 10px 36px', maxWidth: 520 }}>
-          {slider('L', 'l', 0, 1, 0.001)}
-          {slider('C', 'c', 0, 0.4, 0.001)}
-          {slider('H', 'h', 0, 360, 0.5)}
-          {slider('A', 'alpha', 0, 1, 0.01)}
-        </div>
-      )}
-    </div>
+    <Row
+      name={props.name}
+      changed={props.changed}
+      onReset={props.onReset}
+      muted={props.muted}
+      leading={
+        <ColorSwatchPicker value={props.value} onChange={props.onChange} border={props.border} />
+      }
+    >
+      <TextValue value={props.value} onCommit={props.onChange} style={props.inputStyle} />
+    </Row>
   );
 }

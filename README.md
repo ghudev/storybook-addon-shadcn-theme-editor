@@ -12,7 +12,7 @@ then copy the result back into your `app.css`.
 
 - **Reads your theme automatically**: every `--variable` in your `:root { }` and `.dark { }` blocks.
 - **Light and Dark** editing, each with its own values.
-- **OKLCH-native**: colour picker plus lightness, chroma, hue and alpha sliders.
+- **OKLCH-native**: popover colour picker with OKLCH, RGB and HSL channels – switch tabs to convert between them.
 - **Import** a theme from [shadcn studio](https://shadcnstudio.com/theme-generator), tweakcn or any `:root` / `.dark` CSS.
 - **Export** the finished theme as CSS, ready to paste into `app.css`.
 - **Non-destructive**: changes live in your browser only, until you export them.
@@ -81,8 +81,8 @@ export const decorators = [
 
 | Action                | How                                                                      |
 | --------------------- | ------------------------------------------------------------------------ |
-| Change a colour       | Click the swatch, or type any CSS colour into the field                  |
-| Fine-tune in OKLCH    | Click **LCH** for lightness, chroma, hue and alpha sliders               |
+| Change a colour       | Click the swatch and pick in the field, or type any CSS colour           |
+| Fine-tune / convert   | In the picker, choose **OKLCH**, **RGB** or **HSL** and use the sliders  |
 | Change the radius     | Use the slider next to `--radius`                                        |
 | Find a variable       | Type in **Filter variables…**                                            |
 | Try a generated theme | **Import CSS** → paste the `:root` / `.dark` blocks → **Apply**          |
@@ -105,8 +105,9 @@ light value, the matching dark value is written too, so dark mode keeps working 
   (for example `[data-theme="dark"]`) are not picked up yet.
 - Font variables (`--font-sans`, …) only take effect if your `@theme inline` block maps them
   and the font is loaded on the page.
-- The colour picker works in sRGB. Colours outside sRGB are clipped in the picker, but you can
-  still type or slide to any OKLCH value.
+- The picker's colour field works in sRGB. Colours outside sRGB are clipped there (the picker
+  says so), but you can still type or slide to any OKLCH value. Converting such a colour to RGB
+  or HSL clips it to sRGB.
 
 ## Contributing
 
