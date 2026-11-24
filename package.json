@@ -1,20 +1,16 @@
 {
   "name": "storybook-addon-shadcn-theme-editor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Live theme editor for shadcn CSS variables (OKLCH) in Storybook – tweak light & dark colours, radius and fonts, import from and export to app.css.",
   "keywords": [
     "storybook-addon",
-    "storybook",
+    "style",
+    "css",
     "shadcn",
     "shadcn-ui",
-    "shadcn-svelte",
     "theme",
     "theming",
-    "css-variables",
-    "oklch",
-    "tailwindcss",
-    "design-tokens",
-    "style"
+    "tailwindcss"
   ],
   "homepage": "https://github.com/ghudev/storybook-addon-shadcn-theme-editor#readme",
   "bugs": {
@@ -92,12 +88,11 @@
     "supportedFrameworks": [
       "svelte",
       "react",
-      "vue3",
+      "vue",
       "angular",
       "web-components",
       "html",
-      "preact",
-      "solid"
+      "preact"
     ]
   }
 }
