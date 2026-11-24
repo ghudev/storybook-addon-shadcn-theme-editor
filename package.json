@@ -6,11 +6,11 @@
     "storybook-addon",
     "style",
     "css",
+    "css-variables",
     "shadcn",
     "shadcn-ui",
     "theme",
-    "theming",
-    "tailwindcss"
+    "theming"
   ],
   "homepage": "https://github.com/ghudev/storybook-addon-shadcn-theme-editor#readme",
   "bugs": {
